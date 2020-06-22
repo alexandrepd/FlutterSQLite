@@ -5,11 +5,10 @@ import 'package:flutter/material.dart';
 class DogDetails extends StatefulWidget {
   @override
   _DogDetailsState createState() => _DogDetailsState();
-
-  final DogController dogController = DogController();
 }
 
 class _DogDetailsState extends State<DogDetails> {
+  final DogController dogController = DogController();
   Dog dog;
   final _textId = TextEditingController();
   final _textName = TextEditingController();
@@ -106,6 +105,6 @@ class _DogDetailsState extends State<DogDetails> {
 
     dog = Dog(id: id, name: name, age: age);
 
-    widget.dogController.insertDog(dog);
+    dogController.insertDog(dog);
   }
 }

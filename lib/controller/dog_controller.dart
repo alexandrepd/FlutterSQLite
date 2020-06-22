@@ -7,6 +7,7 @@ class DogController {
   final _dogRepository = DogRepository();
 
   final _dogController = StreamController<List<Dog>>.broadcast();
+  get dogs => _dogController.stream;
 
   getDogs({String query}) async {
     _dogController.sink.add(await _dogRepository.getAllDogs(query: query));
