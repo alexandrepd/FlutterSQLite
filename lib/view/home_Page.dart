@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'dog_details.dart';
 
 class HomePage extends StatefulWidget {
-
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -50,11 +48,13 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-@override
-void dispose(){
-  dogController.dispose();
-  super.dispose();
-}
+
+  @override
+  void dispose() {
+    dogController.dispose();
+    super.dispose();
+  }
+
   Widget dogCard(AsyncSnapshot<List<Dog>> snapshot) {
     if (snapshot.hasData) {
       if (snapshot.data.length != 0) {
@@ -94,19 +94,37 @@ void dispose(){
               Row(
                 children: <Widget>[
                   Text("ID"),
-                  Text(dog.id.toString()),
+                  Text(
+                    dog.id.toString(),
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
               Row(
                 children: <Widget>[
                   Text("Name"),
-                  Text(dog.name),
+                  Text(
+                    dog.name,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
               Row(
                 children: <Widget>[
                   Text("Age"),
-                  Text(dog.age.toString()),
+                  Text(
+                    dog.age.toString(),
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ]),
