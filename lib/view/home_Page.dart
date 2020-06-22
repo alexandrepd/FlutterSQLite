@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'dog_details.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
 
-  final String title;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -20,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("CRUD SQFlite"),
       ),
       body: Center(
         child: Column(
@@ -52,7 +50,11 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
+@override
+void dispose(){
+  dogController.dispose();
+  super.dispose();
+}
   Widget dogCard(AsyncSnapshot<List<Dog>> snapshot) {
     if (snapshot.hasData) {
       if (snapshot.data.length != 0) {

@@ -1,5 +1,6 @@
 import 'package:FlutterSQLite/controller/dog_controller.dart';
 import 'package:FlutterSQLite/model/dog.dart';
+import 'package:FlutterSQLite/view/home_Page.dart';
 import 'package:flutter/material.dart';
 
 class DogDetails extends StatefulWidget {
@@ -65,7 +66,13 @@ class _DogDetailsState extends State<DogDetails> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _saveDog();
-          Navigator.pop(context);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => HomePage()),
+              (Route<dynamic> route) => false);
+          // Navigator.pushAndRemoveUntil(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => HomePage()),
+          // );
         }
       },
       textColor: Colors.white,
