@@ -24,7 +24,7 @@ class DogRepository {
     return dogDao.deleteDog(dog);
   }
 
-  Future deleteAllDogs(Dog dog) {
+  Future deleteAllDogs() {
     return dogDao.deleteAllDogs();
   }
 }
