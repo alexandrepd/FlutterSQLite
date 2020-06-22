@@ -8,13 +8,13 @@ class DogDao {
   static String createTable =
       "CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)";
 
-  Future<int> createDog(Dog dog) async {
+  Future<int> insertDog(Dog dog) async {
     final db = await _database.database;
     var result = db.insert(table, dog.toDatabaseJson());
     return result;
   }
 
-  Future<List<Dog>> getDogs({List<String> columns, String query}) async {
+  Future<List<Dog>> selectDogs({List<String> columns, String query}) async {
     final db = await _database.database;
     List<Map<String, dynamic>> result;
 
@@ -41,6 +41,13 @@ class DogDao {
     return result;
   }
 
+  Future<int> deleteDogById(int id) async {
+    final db = await _database.database;
+    var result = await db.delete(table, where: "id = ? ", whereArgs: [id]);
+
+    return result;
+  }
+
   Future<int> deleteDog(Dog dog) async {
     final db = await _database.database;
     var result = await db.delete(table, where: "id = ? ", whereArgs: [dog.id]);
@@ -48,7 +55,7 @@ class DogDao {
     return result;
   }
 
-  Future deleteAllDog() async {
+  Future deleteAllDogs() async {
     final db = await _database.database;
     var result = await db.delete(table);
 
