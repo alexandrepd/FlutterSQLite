@@ -41,7 +41,16 @@ class _DogDetailsState extends State<DogDetails> {
             _getTextField("Id", _textId, widget.dog?.id.toString()),
             _getTextField("Name", _textName, widget.dog?.name),
             _getTextField("Age", _textAge, widget.dog?.age.toString()),
-            _setSaveButton(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _setSaveButton(),
+                Padding(
+                  padding: EdgeInsets.all(5),
+                ),
+                _setDeleteButton(),
+              ],
+            ),
           ],
         ),
       ),
@@ -66,13 +75,7 @@ class _DogDetailsState extends State<DogDetails> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           _saveDog();
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => HomePage()),
-              (Route<dynamic> route) => false);
-          // Navigator.pushAndRemoveUntil(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => HomePage()),
-          // );
+          _setBack();
         }
       },
       textColor: Colors.white,
@@ -81,6 +84,21 @@ class _DogDetailsState extends State<DogDetails> {
       child: new Text(
         isUpdate ? "update" : "Save",
       ),
+    );
+  }
+
+  Widget _setDeleteButton() {
+    return new RaisedButton(
+      onPressed: () {
+        if (isUpdate) {
+          dogController.deleteDogById(widget.dog.id);
+          _setBack();
+        }
+      },
+      textColor: Colors.white,
+      color: Colors.red,
+      padding: const EdgeInsets.all(8.0),
+      child: new Text("Delete"),
     );
   }
 
@@ -113,5 +131,11 @@ class _DogDetailsState extends State<DogDetails> {
       dogController.updateDog(dog);
     else
       dogController.insertDog(dog);
+  }
+
+  _setBack() {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => HomePage()),
+        (Route<dynamic> route) => false);
   }
 }
