@@ -1,5 +1,5 @@
 import 'package:FlutterSQLite/model/dog.dart';
-import 'package:FlutterSQLite/shared/database.dart';
+import 'package:FlutterSQLite/database/database.dart';
 
 class DogDao {
   final DatabaseProvider _database = DatabaseProvider.databaseProvider;
