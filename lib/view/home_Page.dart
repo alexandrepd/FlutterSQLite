@@ -32,7 +32,11 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => DogDetails()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DogDetails(
+                        dog: null,
+                      )));
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
@@ -77,12 +81,14 @@ class _HomePageState extends State<HomePage> {
         side: BorderSide(color: Colors.grey[200], width: 0.5),
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Column(
-        children: <Widget>[
-          // Image.network('https://i.ytimg.com/vi/fq4N0hgOWzU/maxresdefault.jpg'),
-          Padding(
-            padding: new EdgeInsets.all(7.0),
-            child: new Column(children: <Widget>[
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DogDetails(dog: dog)));
+        },
+        child: Column(
+          children: <Widget>[
+            new Column(children: <Widget>[
               Row(
                 children: <Widget>[
                   Text("ID"),
@@ -102,8 +108,8 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ]),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

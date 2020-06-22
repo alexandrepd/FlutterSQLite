@@ -3,12 +3,16 @@ import 'package:FlutterSQLite/model/dog.dart';
 import 'package:flutter/material.dart';
 
 class DogDetails extends StatefulWidget {
+  final Dog dog;
+
+  DogDetails({this.dog});
   @override
   _DogDetailsState createState() => _DogDetailsState();
 }
 
 class _DogDetailsState extends State<DogDetails> {
   final DogController dogController = DogController();
+  bool isUpdate = false;
   Dog dog;
   final _textId = TextEditingController();
   final _textName = TextEditingController();
@@ -17,6 +21,7 @@ class _DogDetailsState extends State<DogDetails> {
 
   @override
   Widget build(BuildContext context) {
+    isUpdate = widget.dog != null;
     return Scaffold(
       appBar: AppBar(
         title: Text("Dog Details"),
@@ -26,39 +31,32 @@ class _DogDetailsState extends State<DogDetails> {
   }
 
   _getBody() {
-    return Center(
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              _getImage(null),
-              _getTextField("Id", _textId),
-              _getTextField("Name", _textName),
-              _getTextField("Age", _textAge),
-              _setSaveButton(),
-            ],
-          ),
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          // mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            _getTextField("Id", _textId, widget.dog?.id.toString()),
+            _getTextField("Name", _textName, widget.dog?.name),
+            _getTextField("Age", _textAge, widget.dog?.age.toString()),
+            _setSaveButton(),
+          ],
         ),
       ),
     );
   }
 
-  Widget _getTextField(String label, TextEditingController controller) {
+  Widget _getTextField(
+      String label, TextEditingController controller, dynamic value) {
+    if (value != null) controller.text = value;
+
     return TextFormField(
       decoration: InputDecoration(labelText: label),
       controller: controller,
       validator: (_) {
         return _validateForm();
       },
-    );
-  }
-
-  Widget _getImage(String image) {
-    return Container(
-      child: Image.network(
-          'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/german-shepherd-dog-1557314959.jpg?crop=0.615xw:1.00xh;0.197xw,0&resize=768:*'),
     );
   }
 
@@ -74,7 +72,7 @@ class _DogDetailsState extends State<DogDetails> {
       color: Colors.red,
       padding: const EdgeInsets.all(8.0),
       child: new Text(
-        "Save",
+        isUpdate ? "update" : "Save",
       ),
     );
   }
@@ -104,7 +102,9 @@ class _DogDetailsState extends State<DogDetails> {
     var age = int.parse(_textAge.value.text);
 
     dog = Dog(id: id, name: name, age: age);
-
-    dogController.insertDog(dog);
+    if (isUpdate)
+      dogController.updateDog(dog);
+    else
+      dogController.insertDog(dog);
   }
 }
