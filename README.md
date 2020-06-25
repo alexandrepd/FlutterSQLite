@@ -1,5 +1,6 @@
 # FlutterSQLite
 Persist data with Flutter, SQLite and Streams
+The project is separated by layers to better understand each responsibility.
 
 Patterns:
   - BLoC
