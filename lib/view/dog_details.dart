@@ -35,23 +35,27 @@ class _DogDetailsState extends State<DogDetails> {
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
-        child: Column(
-          // mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            _getTextField("Id", _textId, widget.dog?.id.toString()),
-            _getTextField("Name", _textName, widget.dog?.name),
-            _getTextField("Age", _textAge, widget.dog?.age.toString()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
               children: <Widget>[
-                _setSaveButton(),
-                Padding(
-                  padding: EdgeInsets.all(5),
+                _getTextField("Id", _textId, widget.dog?.id),
+                _getTextField("Name", _textName, widget.dog?.name),
+                _getTextField("Age", _textAge, widget.dog?.age),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    _setSaveButton(),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                    ),
+                    _setDeleteButton(),
+                  ],
                 ),
-                _setDeleteButton(),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -59,10 +63,18 @@ class _DogDetailsState extends State<DogDetails> {
 
   Widget _getTextField(
       String label, TextEditingController controller, dynamic value) {
-    if (value != null) controller.text = value;
+    if (value == null)
+      controller.text = '';
+    else
+      controller.text = value;
 
     return TextFormField(
-      decoration: InputDecoration(labelText: label),
+      keyboardType: label == 'Id' || label == 'Age'
+          ? TextInputType.number
+          : TextInputType.text,
+      decoration: InputDecoration(
+        labelText: label,
+      ),
       controller: controller,
       validator: (_) {
         return _validateForm();
