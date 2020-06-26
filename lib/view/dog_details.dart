@@ -66,7 +66,7 @@ class _DogDetailsState extends State<DogDetails> {
     if (value == null)
       controller.text = '';
     else
-      controller.text = value;
+      controller.text = value.toString();
 
     return TextFormField(
       keyboardType: label == 'Id' || label == 'Age'
@@ -115,10 +115,10 @@ class _DogDetailsState extends State<DogDetails> {
   }
 
   _validateForm() {
-    if (_textId.value.text == null) {
-      print('id invalido');
-      return;
-    }
+    // if (_textId.value.text == null) {
+    //   print('id invalido');
+    //   return;
+    // }
 
     if (_textName.value.text == null) {
       print('Name invalido');
@@ -134,15 +134,17 @@ class _DogDetailsState extends State<DogDetails> {
   }
 
   _saveDog() {
-    var id = int.parse(_textId.value.text);
     var name = _textName.value.text;
     var age = int.parse(_textAge.value.text);
 
-    dog = Dog(id: id, name: name, age: age);
-    if (isUpdate)
+    if (isUpdate) {
+      var id = int.parse(_textId.value.text);
+      dog = Dog(id: id, name: name, age: age);
       dogController.updateDog(dog);
-    else
+    } else {
+      dog = Dog(name: name, age: age);
       dogController.insertDog(dog);
+    }
   }
 
   _setBack() {

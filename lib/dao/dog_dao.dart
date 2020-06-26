@@ -6,7 +6,7 @@ class DogDao {
 
   static String table = "dogs";
   static String createTable =
-      "CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)";
+      "CREATE TABLE dogs(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)";
 
   Future<int> insertDog(Dog dog) async {
     final db = await _database.database;
