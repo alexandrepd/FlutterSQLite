@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
               return _dogCard(dog);
             });
       } else {
-        return Text("no data");
+        return Text("No data");
       }
     } else {
       return Center(
@@ -83,53 +83,65 @@ class _HomePageState extends State<HomePage> {
         side: BorderSide(color: Colors.grey[200], width: 0.5),
         borderRadius: BorderRadius.circular(5),
       ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => DogDetails(dog: dog)));
-        },
-        child: Column(
-          children: <Widget>[
-            new Column(children: <Widget>[
-              Row(
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DogDetails(dog: dog)));
+              },
+              child: Column(
                 children: <Widget>[
-                  Text("ID"),
-                  Text(
-                    dog.id.toString(),
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: <Widget>[
+                      Text("ID"),
+                      Text(
+                        dog.id.toString(),
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text("Name"),
+                      Text(
+                        dog.name,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text("Age"),
+                      Text(
+                        dog.age.toString(),
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  Text("Name"),
-                  Text(
-                    dog.name,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Text("Age"),
-                  Text(
-                    dog.age.toString(),
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ]),
-          ],
-        ),
+            ),
+          ),
+          IconButton(
+            color: Colors.red,
+            icon: Icon(Icons.delete),
+            onPressed: () => dogController.deleteDogById(dog.id),
+          ),
+        ],
       ),
     );
   }
