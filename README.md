@@ -14,8 +14,8 @@ Packages
   - sqflite: 1.3.1
   - path: 1.6.4
 
-![No Data](/lib/images/noData.png)
+![No Data](/assets/images/noData.png)
 
-![Save Details](/lib/images/saveDetail.png)
+![Save Details](/assets/images/saveDetail.png)
 
-![Dogs](/lib/images/Dogs.png)
+![Dogs](/assets/images/Dogs.png)

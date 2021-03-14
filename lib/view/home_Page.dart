@@ -2,6 +2,7 @@ import 'package:FlutterSQLite/controller/dog_controller.dart';
 import 'package:FlutterSQLite/model/dog.dart';
 import 'package:flutter/material.dart';
 
+import '../controller/dog_controller.dart';
 import 'dog_details.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,33 +19,90 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("CRUD SQFlite"),
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            getDogsWidget(),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
+      body: _getBody(),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "btn1",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
                   builder: (context) => DogDetails(
-                        dog: null,
-                      )));
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+                    dog: null,
+                  ),
+                ),
+              );
+            },
+            tooltip: 'Increment',
+            child: Icon(Icons.add),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          FloatingActionButton(
+            heroTag: "btn2",
+            onPressed: () => dogController.deleteAllDogs(),
+            tooltip: 'Decrement',
+            child: Icon(Icons.delete_forever),
+          ),
+        ],
       ),
     );
   }
 
-  Widget getDogsWidget() {
+  Widget _getBody() {
+    return SafeArea(
+      bottom: true,
+      top: true,
+      child: Column(
+        children: <Widget>[
+          new Container(
+            color: Theme.of(context).primaryColor,
+            child: new Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: new Card(
+                child: new ListTile(
+                  leading: new Icon(Icons.search),
+                  title: new TextField(
+                    // controller: controller,
+                    decoration: new InputDecoration(
+                        hintText: 'Search', border: InputBorder.none),
+                    onChanged: (String value) {
+                      if (value.isNotEmpty) {
+                        dogController.getDogs(query: value);
+                      } else {
+                        dogController.getDogs();
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+          new Expanded(
+            child: _getDogsWidget(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getDogsWidget() {
+    dogController.getDogs();
     return StreamBuilder(
       stream: dogController.dogs,
       builder: (BuildContext context, AsyncSnapshot<List<Dog>> snapshot) {
-        return dogCard(snapshot);
+        if (snapshot.hasData) {
+          if (snapshot.data.length > 0) {
+            return dogCard(context, snapshot.data);
+          } else {
+            return _noDogsContent();
+          }
+        } else {
+          return loadingData();
+        }
       },
     );
   }
@@ -55,30 +113,48 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Widget dogCard(AsyncSnapshot<List<Dog>> snapshot) {
-    if (snapshot.hasData) {
-      if (snapshot.data.length != 0) {
-        return ListView.builder(
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, itemPosition) {
-              Dog dog = snapshot.data[itemPosition];
+  Widget dogCard(BuildContext context, List<Dog> listDogs) {
+    return Column(children: <Widget>[
+      new Expanded(
+        child: ListView.builder(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: listDogs.length,
+          itemBuilder: (context, itemPosition) {
+            Dog dog = listDogs[itemPosition];
 
-              return _dogCard(dog);
-            });
-      } else {
-        return Text("No data");
-      }
-    } else {
-      return Center(
-        child: loadingData(),
-      );
-    }
+            return _dogCard(context, dog);
+          },
+        ),
+      ),
+    ]);
   }
 
-  Widget _dogCard(Dog dog) {
+  Widget _noDogsContent() {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "No data",
+            style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
+          ),
+          ClipOval(
+            child: Image.asset(
+              'assets/images/Dog1.jpg',
+              height: 200,
+              width: 200,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dogCard(BuildContext context, Dog dog) {
     return Card(
+      elevation: 10,
+      shadowColor: Colors.green,
       shape: RoundedRectangleBorder(
         side: BorderSide(color: Colors.grey[200], width: 0.5),
         borderRadius: BorderRadius.circular(5),
@@ -96,42 +172,9 @@ class _HomePageState extends State<HomePage> {
               },
               child: Column(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text("ID"),
-                      Text(
-                        dog.id.toString(),
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("Name"),
-                      Text(
-                        dog.name,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("Age"),
-                      Text(
-                        dog.age.toString(),
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                  _getLabel("ID", dog.id.toString()),
+                  _getLabel("Name", dog.name.toString()),
+                  _getLabel("Age", dog.age.toString()),
                 ],
               ),
             ),
@@ -159,6 +202,27 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _getLabel(String label, String value) {
+    return Row(
+      children: <Widget>[
+        SizedBox(
+          width: 50.0,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 17.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }
